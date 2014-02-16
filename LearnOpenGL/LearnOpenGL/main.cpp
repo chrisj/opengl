@@ -1,31 +1,6 @@
-/* Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above notice and this permission notice shall be included in all copies
- * or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
-/* File for "Basic Shapes" lesson of the OpenGL tutorial on
- * www.videotutorialsrock.com
- */
+#include <stdlib.h>
+#include <cmath>
 
-
-
-#include <iostream>
-#include <stdlib.h> //Needed for "exit" function
-
-//Include OpenGL header files, so that we can use OpenGL
 #ifdef __APPLE__
 #include <OpenGL/OpenGL.h>
 #include <GLUT/glut.h>
@@ -33,96 +8,196 @@
 #include <GL/glut.h>
 #endif
 
-using namespace std;
+#define KEY_ESCAPE 27
 
-//Called when a key is pressed
-void handleKeypress(unsigned char key, //The key that was pressed
-					int x, int y) {    //The current mouse coordinates
-	switch (key) {
-		case 27: //Escape key
-			exit(0); //Exit the program
-	}
-}
-
-//Initializes 3D rendering
 void initRendering() {
-	//Makes 3D drawing work when something is in front of something else
-	glEnable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_MULTISAMPLE);
 }
 
-//Called when the window is resized
-void handleResize(int w, int h) {
-	//Tell OpenGL how to convert from coordinates to pixel values
-	glViewport(0, 0, w, h);
+void drawCoordinates() {
+    glBegin(GL_LINES);
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glVertex3f(-100.0f, 0.0f, 0.0f);
+    glVertex3f(100.0f, 0.0f, 0.0f);
 
-	glMatrixMode(GL_PROJECTION); //Switch to setting the camera perspective
+    glColor3f(0.0f, 1.0f, 0.0f);
+    glVertex3f(0.0f, -100.0f, 0.0f);
+    glVertex3f(0.0f, 100.0f, 0.0f);
 
-	//Set the camera perspective
-	glLoadIdentity(); //Reset the camera
-	gluPerspective(45.0,                  //The camera angle
-				   (double)w / (double)h, //The width-to-height ratio
-				   1.0,                   //The near z clipping coordinate
-				   200.0);                //The far z clipping coordinate
+    glColor3f(0.0f, 0.0f, 1.0f);
+    glVertex3f(0.0f, 0.0f, -100.0f);
+    glVertex3f(0.0f, 0.0f, 100.0f);
+
+    glEnd();
 }
 
-//Draws the 3D scene
-void drawScene() {
-	//Clear information from last draw
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+void drawMouth(float w, float h) {
 
-	glMatrixMode(GL_MODELVIEW); //Switch to the drawing perspective
-	glLoadIdentity(); //Reset the drawing perspective
+    float numOfTeeth = 5;
+    float teethWidth = w / numOfTeeth;
+    float teethHeight = 0.4f;
 
-	glBegin(GL_QUADS); //Begin quadrilateral coordinates
+    h -= teethHeight;
 
-	//Trapezoid
-	glVertex3f(-0.7f, -1.5f, -5.0f);
-	glVertex3f(0.7f, -1.5f, -5.0f);
-	glVertex3f(0.4f, -0.5f, -5.0f);
-	glVertex3f(-0.4f, -0.5f, -5.0f);
 
-	glEnd(); //End quadrilateral coordinates
+    glColor3f(0.7f, 0.4f, 1.0f);
 
-	glBegin(GL_TRIANGLES); //Begin triangle coordinates
 
-	//Pentagon
-	glVertex3f(0.5f, 0.5f, -5.0f);
-	glVertex3f(1.5f, 0.5f, -5.0f);
-	glVertex3f(0.5f, 1.0f, -5.0f);
+    glBegin(GL_TRIANGLES);
 
-	glVertex3f(0.5f, 1.0f, -5.0f);
-	glVertex3f(1.5f, 0.5f, -5.0f);
-	glVertex3f(1.5f, 1.0f, -5.0f);
+    glVertex3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(w, 0.0f, 0.0f);
+    glVertex3f(w, -h, 0.0f);
 
-	glVertex3f(0.5f, 1.0f, -5.0f);
-	glVertex3f(1.5f, 1.0f, -5.0f);
-	glVertex3f(1.0f, 1.5f, -5.0f);
+    glVertex3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(0.0f, -h, 0.0f);
+    glVertex3f(w, -h, 0.0f);
 
-	//Triangle
-	glVertex3f(-0.5f, 0.5f, -5.0f);
-	glVertex3f(-1.0f, 1.5f, -5.0f);
-	glVertex3f(-1.5f, 0.5f, -5.0f);
+    glEnd();
 
-	glEnd(); //End triangle coordinates
+    glPushMatrix();
+    glTranslatef(0.0f, -h, 0.0f);
 
-	glutSwapBuffers(); //Send the 3D scene to the screen
+    glColor3f(0.0f, 0.7f, 0.7f);
+
+    glBegin(GL_TRIANGLES);
+
+    for (float i = 0; i < numOfTeeth; ++i) {
+        glVertex3f(i * teethWidth, 0.0f, 0.0f);
+        glVertex3f((i + 0.5f) * teethWidth, -teethHeight, 0.0f);
+        glVertex3f((i + 1.0f) * teethWidth, 0.0f, 0.0f);
+    }
+
+    glEnd();
+
+    glPopMatrix();
 }
 
-int main(int argc, char** argv) {
-	//Initialize GLUT
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-	glutInitWindowSize(400, 400); //Set the window size
+void drawDragonHead(float x, float y, float z, float a) {
+    float headBaseWidth = 2.0f;
+    float headBaseHeight = 2.0f;
 
-	//Create the window
-	glutCreateWindow("Basic Shapes - videotutorialsrock.com");
-	initRendering(); //Initialize rendering
+    glPushMatrix();
+    glTranslatef(x, y - headBaseHeight / 2.0f, z);
+    glRotatef(180.0f, 0.0f, 1.0f, 0.0f);
 
-	//Set handler functions for drawing, keypresses, and window resizes
-	glutDisplayFunc(drawScene);
-	glutKeyboardFunc(handleKeypress);
-	glutReshapeFunc(handleResize);
+//    glRotatef(a * 180 / M_PI, 0, 0, 1);
 
-	glutMainLoop(); //Start the main loop.  glutMainLoop doesn't return.
-	return 0; //This line is never reached
+    glColor3f(1.0f, 0.0f, 0.0f);
+
+
+    glBegin(GL_QUADS);
+
+    glVertex3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(0.0f, headBaseWidth, 0.0f);
+    glVertex3f(headBaseHeight, headBaseWidth, 0.0f);
+    glVertex3f(headBaseHeight, 0.0f, 0.0f);
+
+    glEnd();
+
+    float mouthLength = 1.8f;
+    float mouthHeight = headBaseHeight / 2.0f;
+
+    glTranslatef(headBaseWidth, headBaseHeight, 0.0f);
+
+    glPushMatrix();
+    glRotatef(15.0f, 0.0f, 0.0f, 1.0f);
+
+    drawMouth(mouthLength, mouthHeight);
+
+    glRotatef(-15.0f, 0.0f, 0.0f, 1.0f);
+    glTranslatef(0.0f, -headBaseHeight, 0.0f);
+    glRotatef(180.0f, 1.0f, 0.0f, 0.0f);
+    glRotatef(15.0f, 0.0f, 0.0f, 1.0f);
+
+    drawMouth(mouthLength, mouthHeight);
+
+    glPopMatrix();
+
+
+
+    // horn
+    glColor3f(0.9f, 0.9f, 0.0f);
+    glBegin(GL_TRIANGLES);
+    glVertex3f(0.0f, 0.0f, 0.0f);
+    glVertex3f(-0.8f, 0.0f, 0.0f);
+    glVertex3f(-2.5f, 0.8f, 0.0f);
+    glEnd();
+
+
+    glPopMatrix();
+}
+
+void drawDragonScale(float x, float y, float z, float a) {
+    glPushMatrix();
+    glTranslatef(x, y, z);
+    glRotatef(a * 180 / M_PI + 90, 0, 0, 1);
+
+    glColor3f(1.0f, 0.6f, 0.0f);
+
+    glBegin(GL_TRIANGLES);
+
+    glVertex3f(-1.0f, -1.0f, 0.0f);
+    glVertex3f(0.0f, 1.0f, 0);
+    glVertex3f(1.0f, -1.0f, 0);
+
+    glEnd();
+    glPopMatrix();
+}
+
+void render() {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    glPushMatrix();
+    glTranslatef(0.0f, 0, -20.f);
+
+    drawCoordinates();
+
+    drawDragonHead(0.0f, 2.5f, 0, 0);
+
+    for (float a = 0; a < M_PI * 4.0f; a += M_PI / 6.0f) {
+        drawDragonScale(1.5f * a, 2.5f*cos(a), 0, -sin(a));
+    }
+
+    glPopMatrix();
+
+    glutSwapBuffers();
+}
+
+void handleKey(unsigned char key, int x, int y){
+    switch (key) {
+        case KEY_ESCAPE:
+            exit(0);
+            break;
+        default:
+            break;
+    }
+}
+
+void handleResize(int width, int height) {
+    glViewport(0, 0, width, height);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(45.0, (double)width / (double)height, 1.0, 200);
+}
+
+int main(int argc, char ** argv){
+    // initialize glut
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH | GLUT_MULTISAMPLE);
+    glutInitWindowSize(400, 400);
+
+    glutCreateWindow("HW2");
+    initRendering();
+
+    glutDisplayFunc(render);
+    glutKeyboardFunc(handleKey);
+    glutReshapeFunc(handleResize);
+
+    glutMainLoop();
+    return 0;
 }
