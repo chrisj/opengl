@@ -26,7 +26,6 @@
 
 /* Begin PBXFileReference section */
 		AD1BCE6A18ADE84E00BA99BD /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
-		ADDD30F218274C0E00E0B414 /* libGLEW.1.10.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.1.10.0.dylib; path = ../../../../../usr/local/Cellar/glew/1.10.0/lib/libGLEW.1.10.0.dylib; sourceTree = "<group>"; };
 		ADDD30F4182764FA00E0B414 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		ADE9515D18273EC600CD9FAE /* LearnOpenGL */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = LearnOpenGL; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADE9516018273EC600CD9FAE /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
@@ -50,7 +49,6 @@
 			children = (
 				AD1BCE6A18ADE84E00BA99BD /* GLUT.framework */,
 				ADDD30F4182764FA00E0B414 /* OpenGL.framework */,
-				ADDD30F218274C0E00E0B414 /* libGLEW.1.10.0.dylib */,
 				ADE9515F18273EC600CD9FAE /* LearnOpenGL */,
 				ADE9515E18273EC600CD9FAE /* Products */,
 			);
